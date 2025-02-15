@@ -7,6 +7,7 @@ export const DialogItem = (props) => {
 
   return (
     <div className={classes.dialog}>
+      <img src={props.avatar} alt='avatar' />
       <NavLink to={path} className={({ isActive }) => (isActive ? classes.active : "")}>
         {props.name}
       </NavLink>
