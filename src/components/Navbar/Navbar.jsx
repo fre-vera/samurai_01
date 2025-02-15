@@ -2,7 +2,7 @@ import { React } from "react";
 import classes from './Navbar.module.scss';
 import { NavLink } from "react-router-dom";
 
-export const Navbar = () => {
+export const Navbar = (props) => {
   return (
    <nav className={classes.nav}>
     <div className={classes.item}>
@@ -29,6 +29,17 @@ export const Navbar = () => {
     <NavLink to='/settings' className={({ isActive }) => (isActive ? classes.active : "")}>
        Settings
     </NavLink>
+    </div>
+    <div className={classes.wrapper}>
+      <h3>Friends</h3>
+      <div className={classes.friendsList}>
+        {props.state.map( friend => 
+          <div className={classes.card}>
+            <p className={classes.name}>{friend.name}</p>
+            <img src={friend.img} alt={friend.name} className={classes.avatar} />
+          </div>
+        )}
+      </div>
     </div>
    </nav>
   );
