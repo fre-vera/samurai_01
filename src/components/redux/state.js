@@ -1,3 +1,5 @@
+let renderEntireTree = () => {};
+
 export const state = {
   dialogsPage: {
     dialogs: [
@@ -19,6 +21,7 @@ export const state = {
       {id:1, message: 'Hi, how are you', likesCount: 15},
       {id:2,  message: 'My first post', likesCount: 20},
     ],
+    newPostText: 'it-kamasutra.com'
   },
   sidebar: [
       {id:1, name: 'Andrey', img:'https://png.pngtree.com/png-clipart/20240705/original/pngtree-web-programmer-avatar-png-image_15495273.png'},
@@ -26,3 +29,23 @@ export const state = {
       {id:3, name: 'Sveta', img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE6MJGf5aOBXXbTBPdhJjQPWatzY-i7EYObg&s'},
     ]
 };
+
+export const addPost = () => {
+  const newPost = {
+    id: state.profilePage.posts.length + 1,
+    message: state.profilePage.newPostText,
+    likesCount: 0,
+  };
+  state.profilePage.posts = [...state.profilePage.posts, newPost];
+  state.profilePage.newPostText = '';
+  renderEntireTree(state);
+};
+
+export const updateNewPostText = (newText) => {
+  state.profilePage.newPostText = newText;
+  renderEntireTree(state);
+};
+
+export const subscribe = (observer) => {
+  renderEntireTree = observer;
+}; 
