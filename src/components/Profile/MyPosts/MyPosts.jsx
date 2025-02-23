@@ -1,6 +1,8 @@
 import { React, useRef } from "react";
 import classes from './MyPosts.module.scss';
 import { Post } from './Post';
+import { addPostActionCreator } from "../../redux/state";
+import { updateNewPostTextActionCreator } from "../../redux/state";
 
 export const MyPosts = (props) => {
 
@@ -8,12 +10,12 @@ export const MyPosts = (props) => {
   const newPostElement = useRef();
 
   const addPost = () => {
-    props.addPost();
+    props.dispatch(addPostActionCreator());
   };
 
   const onPostChange = () => {
     const text = newPostElement.current.value;
-    props.updateNewPostText(text);
+    props.dispatch(updateNewPostTextActionCreator(text));
   };
 
   return (
