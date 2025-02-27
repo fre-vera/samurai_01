@@ -1,8 +1,8 @@
-import { React, useRef } from "react";
+import { React, useRef } from 'react';
 import classes from './MyPosts.module.scss';
 import { Post } from './Post';
-import { addPostActionCreator } from "../../redux/state";
-import { updateNewPostTextActionCreator } from "../../redux/state";
+import { addPostActionCreator } from '../../redux/profile-reducer';
+import { updateNewPostTextActionCreator } from '../../redux/profile-reducer';
 
 export const MyPosts = (props) => {
 
