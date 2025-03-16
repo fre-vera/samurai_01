@@ -1,17 +1,13 @@
-import { React } from "react";
-import { MyPosts } from "./MyPosts";
-import { ProfileInfo } from "./ProfileInfo";
+import { React } from 'react';
+import { MyPostsContainer } from './MyPosts/MyPostsContainer';
+import { ProfileInfo } from './ProfileInfo';
 
-export const Profile = (props) => {
+export const Profile = () => {
 
   return (
     <div>
       <ProfileInfo />
-      <MyPosts 
-        posts={props.state.posts} 
-        newPostText={props.state.newPostText}
-        dispatch={props.dispatch} 
-      />
+      <MyPostsContainer />
     </div>
   );
 };
