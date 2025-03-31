@@ -6,6 +6,28 @@
   max-width: 400px;
 }
 
+.pagination {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pageNumber {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #ddd;
+  }
+}
+
+.active {
+  font-weight: bold;
+  color: red;
+}
+
 .user {
   display: flex;
   align-items: center;
