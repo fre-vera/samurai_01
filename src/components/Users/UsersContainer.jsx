@@ -1,25 +1,24 @@
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-// import { useState } from 'react';
 import { Users } from './Users';
 import { useEffect } from 'react';
 import axios from 'axios';
 
 
 export const UsersContainer = () => {
-  const usersPage = useSelector(store => store.usersPage);
+  const usersPage = useSelector((store) => store.usersPage);
   const dispatch = useDispatch();
 
   const pagesCount = Math.ceil(usersPage.totalUsersCount / usersPage.pageSize);
 
   const unFollowAC = (userId) => {
-    dispatch({ type: 'UNFOLLOW', userId })
+    dispatch({ type: 'UNFOLLOW', userId });
   };
   const follow = (userId) => {
-    dispatch({ type: 'FOLLOW', userId })
+    dispatch({ type: 'FOLLOW', userId });
   };
   const setUsersAC = (users) => {
-    dispatch({ type: 'SET_USERS', users })
+    dispatch({ type: 'SET_USERS', users });
   };
   const setCurrentPageAC = (currentPage) => {
     dispatch({ type: 'SET_CURRENT_PAGE', currentPage });
@@ -40,16 +39,15 @@ export const UsersContainer = () => {
         setTotalUsersCountAC(response.data.totalCount);
       })
       .catch((error) => console.error('Ошибка:', error));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, usersPage.currentPage, usersPage.pageSize]);
 
 
-return <Users 
-          usersPage={usersPage}
-          unFollowAC={unFollowAC}
-          followAC={follow}
-          pagesCount={pagesCount}
-          currentPage={usersPage.currentPage}
-          setCurrentPage={onPageChanged}
-        />
+  return <Users
+    usersPage={usersPage}
+    unFollowAC={unFollowAC}
+    followAC={follow}
+    pagesCount={pagesCount}
+    currentPage={usersPage.currentPage}
+    setCurrentPage={onPageChanged}
+  />;
 };
