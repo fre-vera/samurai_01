@@ -1,7 +1,7 @@
-import { React } from "react";
-import classes from "./ProfileInfo.module.scss";
+import { React } from 'react';
+import classes from './ProfileInfo.module.scss';
 
-export const ProfileInfo = () =>{
+export const ProfileInfo = () => {
   return (
     <div>
       <div className={classes.imgBlock}>
@@ -10,6 +10,6 @@ export const ProfileInfo = () =>{
       <div className={classes.descriptionBlock}>
         ava + description
       </div>
-  </div>
+    </div>
   );
 };

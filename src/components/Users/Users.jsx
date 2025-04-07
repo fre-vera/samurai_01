@@ -1,11 +1,12 @@
 import React from 'react';
 import classes from './Users.module.scss';
 import userPhoto from '../assets/images/avatar.jpg';
+import { Preloader } from '../Preloader/Preloader';
 
 export const Users = (props) => {
-  
+
   const pages = Array.from({ length: props.pagesCount }, (_, i) => i + 1);
-  let curPage = props.currentPage;
+  const curPage = props.currentPage;
   let slicedPages;
   if (curPage - 3 < 0) {
     slicedPages = pages.slice(0, 5);
@@ -15,6 +16,7 @@ export const Users = (props) => {
 
   return (
     <div className={classes.usersContainer}>
+      <Preloader isActive={props.usersPage.isUsersLoading} />
       <div className={classes.pagination}>
         {slicedPages.map((page) => (
           <span
@@ -29,7 +31,7 @@ export const Users = (props) => {
       {props.usersPage.users.map((user) => (
         <div key={user.id} className={classes.user}>
           <div className={classes.avatar}>
-            <img src={user.photos.small != null ? user.photos.small : userPhoto} alt={user.name} />
+            <img src={user.photos.small !== null ? user.photos.small : userPhoto} alt={user.name} />
           </div>
           <div className={classes.userInfo}>
             <div className={classes.name}>{user.name}</div>
