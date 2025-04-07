@@ -3,12 +3,14 @@ const FOLLOW = 'FOLLOW';
 const SET_USERS = 'SET_USERS';
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
+const SET_IS_USERS_LOADING = 'SET_IS_USERS_LOADING';
 
 const initialState = {
   users: [],
   pageSize: 5,
   totalUsersCount: 0,
   currentPage: 1,
+  isUsersLoading: false,
 };
 
 export const usersReducer = (state = initialState, action) => {
@@ -45,6 +47,8 @@ export const usersReducer = (state = initialState, action) => {
       return {
         ...state, totalUsersCount: action.setTotalUsersCount,
       };
+    case SET_IS_USERS_LOADING:
+      return { ...state, isUsersLoading: action.isUsersLoading };
     default:
       return state;
   }
@@ -55,3 +59,4 @@ export const followAC = (userId) => ({ type: FOLLOW, userId });
 export const setUsersAC = (users) => ({ type: SET_USERS, users });
 export const setCurrentPageAC = (currentPage) => ({ type: SET_CURRENT_PAGE, currentPage });
 export const setTotalUsersCountAC = (setTotalUsersCount) => ({ type: SET_TOTAL_USERS_COUNT, setTotalUsersCount });
+export const setIsUsersLoadingAC = (isUsersLoading) => ({ type: SET_IS_USERS_LOADING, isUsersLoading });

@@ -1,6 +1,7 @@
 import React from 'react';
 import classes from './Users.module.scss';
 import userPhoto from '../assets/images/avatar.jpg';
+import { Preloader } from '../Preloader/Preloader';
 
 export const Users = (props) => {
 
@@ -15,6 +16,7 @@ export const Users = (props) => {
 
   return (
     <div className={classes.usersContainer}>
+      <Preloader isActive={props.usersPage.isUsersLoading} />
       <div className={classes.pagination}>
         {slicedPages.map((page) => (
           <span

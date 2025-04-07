@@ -3,7 +3,14 @@ import { useDispatch } from 'react-redux';
 import { Users } from './Users';
 import { useEffect } from 'react';
 import axios from 'axios';
-
+import {
+  unFollowAC,
+  followAC,
+  setUsersAC,
+  setCurrentPageAC,
+  setTotalUsersCountAC,
+  setIsUsersLoadingAC,
+} from '../redux/users-reducer';
 
 export const UsersContainer = () => {
   const usersPage = useSelector((store) => store.usersPage);
@@ -11,43 +18,40 @@ export const UsersContainer = () => {
 
   const pagesCount = Math.ceil(usersPage.totalUsersCount / usersPage.pageSize);
 
-  const unFollowAC = (userId) => {
-    dispatch({ type: 'UNFOLLOW', userId });
-  };
-  const follow = (userId) => {
-    dispatch({ type: 'FOLLOW', userId });
-  };
-  const setUsersAC = (users) => {
-    dispatch({ type: 'SET_USERS', users });
-  };
-  const setCurrentPageAC = (currentPage) => {
-    dispatch({ type: 'SET_CURRENT_PAGE', currentPage });
-  };
-  const setTotalUsersCountAC = (setTotalUsersCount) => {
-    dispatch({ type: 'SET_TOTAL_USERS_COUNT', setTotalUsersCount });
-  };
-
   const onPageChanged = (pageNumber) => {
-    setCurrentPageAC(pageNumber);
+    dispatch(setCurrentPageAC(pageNumber));
+    // Выполняем запрос при смене страницы
+    dispatch(setIsUsersLoadingAC(true));
+    axios
+      .get(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${usersPage.pageSize}`)
+      .then((response) => {
+        dispatch(setUsersAC(response.data.items));
+        dispatch(setTotalUsersCountAC(response.data.totalCount));
+      })
+      .catch((error) => console.error('Ошибка:', error))
+      .finally(() => dispatch(setIsUsersLoadingAC(false)));
   };
 
   useEffect(() => {
+    dispatch(setIsUsersLoadingAC(true));
     axios
       .get(`https://social-network.samuraijs.com/api/1.0/users?page=${usersPage.currentPage}&count=${usersPage.pageSize}`)
       .then((response) => {
-        setUsersAC(response.data.items);
-        setTotalUsersCountAC(response.data.totalCount);
+        dispatch(setUsersAC(response.data.items));
+        dispatch(setTotalUsersCountAC(response.data.totalCount));
       })
-      .catch((error) => console.error('Ошибка:', error));
+      .catch((error) => console.error('Ошибка:', error))
+      .finally(() => dispatch(setIsUsersLoadingAC(false)));
   }, [dispatch, usersPage.currentPage, usersPage.pageSize]);
 
-
-  return <Users
-    usersPage={usersPage}
-    unFollowAC={unFollowAC}
-    followAC={follow}
-    pagesCount={pagesCount}
-    currentPage={usersPage.currentPage}
-    setCurrentPage={onPageChanged}
-  />;
+  return (
+    <Users
+      usersPage={usersPage}
+      unFollowAC={(userId) => dispatch(unFollowAC(userId))}
+      followAC={(userId) => dispatch(followAC(userId))}
+      pagesCount={pagesCount}
+      currentPage={usersPage.currentPage}
+      setCurrentPage={onPageChanged}
+    />
+  );
 };
