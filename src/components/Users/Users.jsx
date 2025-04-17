@@ -2,6 +2,7 @@ import React from 'react';
 import classes from './Users.module.scss';
 import userPhoto from '../assets/images/avatar.jpg';
 import { Preloader } from '../Preloader/Preloader';
+import { NavLink } from 'react-router-dom';
 
 export const Users = (props) => {
 
@@ -31,7 +32,9 @@ export const Users = (props) => {
       {props.usersPage.users.map((user) => (
         <div key={user.id} className={classes.user}>
           <div className={classes.avatar}>
-            <img src={user.photos.small !== null ? user.photos.small : userPhoto} alt={user.name} />
+            <NavLink to={`/profile/${user.id}`}>
+              <img src={user.photos.small !== null ? user.photos.small : userPhoto} alt={user.name} />
+            </NavLink>
           </div>
           <div className={classes.userInfo}>
             <div className={classes.name}>{user.name}</div>
