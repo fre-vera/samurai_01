@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './App.module.scss';
 import { Header } from './components';
 import { Navbar } from './components';
-import { Profile } from './components';
+import { ProfileContainer } from './components/Profile/ProfileContainer';
 import { DialogsContainer } from './components/Dialogs/DialogsContainer';
 import { UsersContainer } from './components/Users/UsersContainer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -18,7 +18,7 @@ export const App = (props) => {
         <Navbar state={sidebar} />
         <div className={classes.appContent}>
           <Routes>
-            <Route path='/profile' element={<Profile />} />
+            <Route path='/profile/:userId?' element={<ProfileContainer />} />
             <Route path='/dialogs' element={<DialogsContainer />} />
             <Route path='/users' element={<UsersContainer />} />
             {/* <Route path='/news' element={<News />} />
