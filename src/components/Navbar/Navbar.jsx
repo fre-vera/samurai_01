@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import classes from './Navbar.module.scss';
 import { NavLink } from 'react-router-dom';
 
@@ -27,19 +27,19 @@ export const Navbar = (props) => {
       </div>
       <div className={classes.item}>
         <NavLink to='/settings' className={({ isActive }) => (isActive ? classes.active : '')}>
-           Settings
+          Settings
         </NavLink>
       </div>
       <div className={classes.item}>
         <NavLink to='/users' className={({ isActive }) => (isActive ? classes.active : '')}>
-            Users
+          Users
         </NavLink>
       </div>
       <div className={classes.wrapper}>
         <h3>Friends</h3>
         <div className={classes.friendsList}>
           {props.state.map((friend) =>
-            <div key={item.id} className={classes.card}>
+            <div key={friend.id} className={classes.card}>
               <p className={classes.name}>{friend.name}</p>
               <img src={friend.img} alt={friend.name} className={classes.avatar} />
             </div>,

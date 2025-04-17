@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import classes from './Dialogs.module.scss';
 import { DialogItem } from './DialogItem';
 import { Message } from './Message';

@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import classes from './MyPosts.module.scss';
 import { Post } from './Post';
 
