@@ -4,17 +4,17 @@ import { sendMessageCreator, updateNewMessageBodyCreator } from '../redux/dialog
 import { Dialogs } from './Dialogs';
 
 export const DialogsContainer = () => {
-  const dialogsPage = useSelector(store => store.dialogsPage);
+  const dialogsPage = useSelector((store) => store.dialogsPage);
   const dispatch = useDispatch();
 
   const onSendMessageClick = () => {
-    dispatch(sendMessageCreator())
+    dispatch(sendMessageCreator());
   };
 
   const onNewMessageChange = (event) => {
-    let body = event.target.value;
-    dispatch(updateNewMessageBodyCreator(body))
+    const body = event.target.value;
+    dispatch(updateNewMessageBodyCreator(body));
   };
 
-return <Dialogs dialogsPage={dialogsPage} onSendMessageClick={onSendMessageClick} onNewMessageChange={onNewMessageChange} />
+  return <Dialogs dialogsPage={dialogsPage} onSendMessageClick={onSendMessageClick} onNewMessageChange={onNewMessageChange} />;
 };
