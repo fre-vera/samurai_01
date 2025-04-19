@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './App.module.scss';
-import { Header } from './components';
+import { HeaderContainer } from './components/Header';
 import { Navbar } from './components';
 import { ProfileContainer } from './components/Profile/ProfileContainer';
 import { DialogsContainer } from './components/Dialogs/DialogsContainer';
@@ -14,11 +14,11 @@ export const App = (props) => {
   return (
     <BrowserRouter>
       <div className={classes.appWrapper}>
-        <Header />
+        <HeaderContainer />
         <Navbar state={sidebar} />
         <div className={classes.appContent}>
           <Routes>
-            <Route path='/profile/:userId?' element={<ProfileContainer />} />
+            <Route path='/profile/:userId' element={<ProfileContainer />} />
             <Route path='/dialogs' element={<DialogsContainer />} />
             <Route path='/users' element={<UsersContainer />} />
             {/* <Route path='/news' element={<News />} />
