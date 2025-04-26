@@ -47,14 +47,14 @@ export const Users = (props) => {
           <div>
             {user.followed ? (
               <button
-                onClick={() => props.unFollowAC(user.id)}
+                onClick={() => props.unFollowUser(user.id)}
                 className={`${classes.button} ${classes.unfollow}`}
               >
                 Unfollow
               </button>
             ) : (
               <button
-                onClick={() => props.followAC(user.id)}
+                onClick={() => props.followUser(user.id)}
                 className={`${classes.button} ${classes.follow}`}
               >
                 Follow
