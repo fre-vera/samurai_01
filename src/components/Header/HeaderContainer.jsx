@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import { headerApi } from '../../api/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,15 +15,15 @@ export const HeaderContainer = () => {
   }));
 
   useEffect(() => {
-    axios
-      .get(`https://social-network.samuraijs.com/api/1.0/auth/me`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        if (response.data.resultCode === 0) {
-          const { id, email, login } = response.data.data;
+    headerApi.getAuth()
+      .then((data) => {
+        if (data.resultCode === 0) {
+          const { id, email, login } = data.data;
           dispatch(setAuthUserData(id, email, login));
         }
+      })
+      .catch((error) => {
+        console.error('Ошибка при получении данных авторизации:', error);
       });
   }, [dispatch]);
 
