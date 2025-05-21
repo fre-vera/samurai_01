@@ -9,6 +9,7 @@ import {
   setCurrentPageAC,
   setTotalUsersCountAC,
   setIsUsersLoadingAC,
+  toggleFollowingProgress,
 } from '../redux/users-reducer';
 
 export const UsersContainer = () => {
@@ -20,7 +21,8 @@ export const UsersContainer = () => {
   const handlePageChange = (pageNumber) => {
     dispatch(setCurrentPageAC(pageNumber));
     dispatch(setIsUsersLoadingAC(true));
-    usersAPI.getUsers(pageNumber, usersPage.pageSize)
+    usersAPI
+      .getUsers(pageNumber, usersPage.pageSize)
       .then((data) => {
         dispatch(setUsersAC(data.items));
         dispatch(setTotalUsersCountAC(data.totalCount));
@@ -30,28 +32,43 @@ export const UsersContainer = () => {
   };
 
   const handleFollow = (userId) => {
-    usersAPI.follow(userId)
+    dispatch(toggleFollowingProgress(true, userId));
+    usersAPI
+      .follow(userId)
       .then((data) => {
         if (data.resultCode === 0) {
           dispatch(followAC(userId));
         }
       })
-      .catch((error) => console.error('Ошибка при подписке:', error));
+      .catch((error) => {
+        console.error('Ошибка при подписке:', error);
+      })
+      .finally(() => {
+        dispatch(toggleFollowingProgress(false, userId));
+      });
   };
 
   const handleUnfollow = (userId) => {
-    usersAPI.unfollow(userId)
+    dispatch(toggleFollowingProgress(true, userId));
+    usersAPI
+      .unfollow(userId)
       .then((data) => {
         if (data.resultCode === 0) {
           dispatch(unFollowAC(userId));
         }
       })
-      .catch((error) => console.error('Ошибка при отписке:', error));
+      .catch((error) => {
+        console.error('Ошибка при отписке:', error);
+      })
+      .finally(() => {
+        dispatch(toggleFollowingProgress(false, userId));
+      });
   };
 
   useEffect(() => {
     dispatch(setIsUsersLoadingAC(true));
-    usersAPI.getUsers(usersPage.currentPage, usersPage.pageSize)
+    usersAPI
+      .getUsers(usersPage.currentPage, usersPage.pageSize)
       .then((data) => {
         dispatch(setUsersAC(data.items));
         dispatch(setTotalUsersCountAC(data.totalCount));
@@ -68,6 +85,7 @@ export const UsersContainer = () => {
       pagesCount={pagesCount}
       currentPage={usersPage.currentPage}
       setCurrentPage={handlePageChange}
+      toggleFollowingProgress={usersPage.followingInProgress}
     />
   );
 };
