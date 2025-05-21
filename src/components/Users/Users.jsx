@@ -5,7 +5,6 @@ import { Preloader } from '../Preloader/Preloader';
 import { NavLink } from 'react-router-dom';
 
 export const Users = (props) => {
-
   const pages = Array.from({ length: props.pagesCount }, (_, i) => i + 1);
   const curPage = props.currentPage;
   let slicedPages;
@@ -40,13 +39,10 @@ export const Users = (props) => {
             <div className={classes.name}>{user.name}</div>
             <div className={classes.status}>{user.status}</div>
           </div>
-          {/* <div className={classes.location}>
-            <div>{user.location.country}</div>
-            <div>{user.location.city}</div>
-          </div> */}
           <div>
             {user.followed ? (
               <button
+                disabled={props.toggleFollowingProgress.includes(user.id)} // Используем includes
                 onClick={() => props.unFollowUser(user.id)}
                 className={`${classes.button} ${classes.unfollow}`}
               >
@@ -54,6 +50,7 @@ export const Users = (props) => {
               </button>
             ) : (
               <button
+                disabled={props.toggleFollowingProgress.includes(user.id)} // Используем includes
                 onClick={() => props.followUser(user.id)}
                 className={`${classes.button} ${classes.follow}`}
               >
