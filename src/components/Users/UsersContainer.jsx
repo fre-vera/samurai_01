@@ -1,15 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Users } from './Users';
-import { usersAPI } from '../../api/api';
 import { useEffect } from 'react';
 import {
-  unFollowAC,
-  followAC,
-  setUsersAC,
   setCurrentPageAC,
-  setTotalUsersCountAC,
   setIsUsersLoadingAC,
   toggleFollowingProgress,
+  getUsersThunkCreator,
+  followUserThunk,
+  unFollowUserThunk,
 } from '../redux/users-reducer';
 
 export const UsersContainer = () => {
@@ -21,60 +19,22 @@ export const UsersContainer = () => {
   const handlePageChange = (pageNumber) => {
     dispatch(setCurrentPageAC(pageNumber));
     dispatch(setIsUsersLoadingAC(true));
-    usersAPI
-      .getUsers(pageNumber, usersPage.pageSize)
-      .then((data) => {
-        dispatch(setUsersAC(data.items));
-        dispatch(setTotalUsersCountAC(data.totalCount));
-      })
-      .catch((error) => console.error('Ошибка загрузки пользователей:', error))
-      .finally(() => dispatch(setIsUsersLoadingAC(false)));
+    dispatch(getUsersThunkCreator(pageNumber, usersPage.pageSize));
   };
 
   const handleFollow = (userId) => {
     dispatch(toggleFollowingProgress(true, userId));
-    usersAPI
-      .follow(userId)
-      .then((data) => {
-        if (data.resultCode === 0) {
-          dispatch(followAC(userId));
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при подписке:', error);
-      })
-      .finally(() => {
-        dispatch(toggleFollowingProgress(false, userId));
-      });
+    dispatch(followUserThunk(userId));
   };
 
   const handleUnfollow = (userId) => {
     dispatch(toggleFollowingProgress(true, userId));
-    usersAPI
-      .unfollow(userId)
-      .then((data) => {
-        if (data.resultCode === 0) {
-          dispatch(unFollowAC(userId));
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при отписке:', error);
-      })
-      .finally(() => {
-        dispatch(toggleFollowingProgress(false, userId));
-      });
+    dispatch(unFollowUserThunk(userId));
   };
 
   useEffect(() => {
     dispatch(setIsUsersLoadingAC(true));
-    usersAPI
-      .getUsers(usersPage.currentPage, usersPage.pageSize)
-      .then((data) => {
-        dispatch(setUsersAC(data.items));
-        dispatch(setTotalUsersCountAC(data.totalCount));
-      })
-      .catch((error) => console.error('Ошибка загрузки пользователей:', error))
-      .finally(() => dispatch(setIsUsersLoadingAC(false)));
+    dispatch(getUsersThunkCreator(usersPage.currentPage, usersPage.pageSize));
   }, [dispatch, usersPage.currentPage, usersPage.pageSize]);
 
   return (
