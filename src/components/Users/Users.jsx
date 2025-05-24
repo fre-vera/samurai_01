@@ -42,7 +42,7 @@ export const Users = (props) => {
           <div>
             {user.followed ? (
               <button
-                disabled={props.toggleFollowingProgress.includes(user.id)} // Используем includes
+                disabled={props.toggleFollowingProgress.includes(user.id)}
                 onClick={() => props.unFollowUser(user.id)}
                 className={`${classes.button} ${classes.unfollow}`}
               >
@@ -50,7 +50,7 @@ export const Users = (props) => {
               </button>
             ) : (
               <button
-                disabled={props.toggleFollowingProgress.includes(user.id)} // Используем includes
+                disabled={props.toggleFollowingProgress.includes(user.id)}
                 onClick={() => props.followUser(user.id)}
                 className={`${classes.button} ${classes.follow}`}
               >
