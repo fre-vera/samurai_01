@@ -4,6 +4,7 @@ import { profileReducer } from './profile-reducer';
 import { sidebarReducer } from './sidebar-reducer';
 import { usersReducer } from './users-reducer';
 import { authReducer } from './auth-reduser';
+import { thunk } from 'redux-thunk';
 
 export const reducer = combineReducers({
   profilePage: profileReducer,
@@ -15,4 +16,5 @@ export const reducer = combineReducers({
 
 export const store = configureStore({
   reducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 });

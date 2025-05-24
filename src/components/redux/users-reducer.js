@@ -1,3 +1,5 @@
+import { usersAPI } from '../../api/api';
+
 const UNFOLLOW = 'UNFOLLOW';
 const FOLLOW = 'FOLLOW';
 const SET_USERS = 'SET_USERS';
@@ -50,7 +52,7 @@ export const usersReducer = (state = initialState, action) => {
     case SET_TOTAL_USERS_COUNT:
       return {
         ...state,
-        totalUsersCount: action.setTotalUsersCount,
+        totalUsersCount: action.totalUsersCount,
       };
     case SET_IS_USERS_LOADING:
       return {
@@ -76,9 +78,9 @@ export const setCurrentPageAC = (currentPage) => ({
   type: SET_CURRENT_PAGE,
   currentPage,
 });
-export const setTotalUsersCountAC = (setTotalUsersCount) => ({
+export const setTotalUsersCountAC = (totalUsersCount) => ({
   type: SET_TOTAL_USERS_COUNT,
-  setTotalUsersCount,
+  totalUsersCount,
 });
 export const setIsUsersLoadingAC = (isUsersLoading) => ({
   type: SET_IS_USERS_LOADING,
@@ -89,3 +91,49 @@ export const toggleFollowingProgress = (isFetching, userId) => ({
   isFetching,
   userId,
 });
+
+export const getUsersThunkCreator = (pageNumber, pageSize) => {
+  return (dispatch) => {
+    usersAPI.getUsers(pageNumber, pageSize)
+      .then((data) => {
+        dispatch(setUsersAC(data.items));
+        dispatch(setTotalUsersCountAC(data.totalCount));
+      })
+      .catch((error) => console.error('Ошибка загрузки пользователей:', error))
+      .finally(() => dispatch(setIsUsersLoadingAC(false)));
+  };
+};
+
+export const followUserThunk = (userId) => {
+  return (dispatch) => {
+    usersAPI.follow(userId)
+      .then((data) => {
+        if (data.resultCode === 0) {
+          dispatch(followAC(userId));
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка при подписке:', error);
+      })
+      .finally(() => {
+        dispatch(toggleFollowingProgress(false, userId));
+      });
+  };
+};
+
+export const unFollowUserThunk = (userId) => {
+  return (dispatch) => {
+    usersAPI.unfollow(userId)
+      .then((data) => {
+        if (data.resultCode === 0) {
+          dispatch(unFollowAC(userId));
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка при подписке:', error);
+      })
+      .finally(() => {
+        dispatch(toggleFollowingProgress(false, userId));
+      });
+  };
+};
