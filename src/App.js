@@ -5,6 +5,7 @@ import { Navbar } from './components';
 import { ProfileContainer } from './components/Profile/ProfileContainer';
 import { DialogsContainer } from './components/Dialogs/DialogsContainer';
 import { UsersContainer } from './components/Users/UsersContainer';
+import { Login } from './components/Login/Login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -21,6 +22,7 @@ export const App = (props) => {
             <Route path='/profile/:userId' element={<ProfileContainer />} />
             <Route path='/dialogs' element={<DialogsContainer />} />
             <Route path='/users' element={<UsersContainer />} />
+            <Route path='/login' element={<Login />} />
             {/* <Route path='/news' element={<News />} />
         <Route path='/music' element={<Music />} />
         <Route path='/settings' element={<Settings />} /> */}

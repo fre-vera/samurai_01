@@ -5,6 +5,8 @@ import { Dialogs } from './Dialogs';
 
 export const DialogsContainer = () => {
   const dialogsPage = useSelector((store) => store.dialogsPage);
+  const isAuth = useSelector((store) => store.auth.isAuth);
+
   const dispatch = useDispatch();
 
   const onSendMessageClick = () => {
@@ -16,5 +18,5 @@ export const DialogsContainer = () => {
     dispatch(updateNewMessageBodyCreator(body));
   };
 
-  return <Dialogs dialogsPage={dialogsPage} onSendMessageClick={onSendMessageClick} onNewMessageChange={onNewMessageChange} />;
+  return <Dialogs dialogsPage={dialogsPage} isAuth={isAuth} onSendMessageClick={onSendMessageClick} onNewMessageChange={onNewMessageChange} />;
 };
