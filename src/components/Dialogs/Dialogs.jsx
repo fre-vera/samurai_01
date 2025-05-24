@@ -1,4 +1,3 @@
-import { Navigate } from 'react-router';
 import classes from './Dialogs.module.scss';
 import { DialogItem } from './DialogItem';
 import { Message } from './Message';
@@ -7,8 +6,6 @@ export const Dialogs = (props) => {
 
   const dialogsElements = props.dialogsPage.dialogs.map((dialog) => <DialogItem name={dialog.name} id={dialog.id} avatar={dialog.avatar} />);
   const messageElements = props.dialogsPage.messages.map((message) => <Message message={message.message} id={message.id} />);
-
-  if (!props.isAuth) return <Navigate to={'/login'} />;
 
   return (
     <div className={classes.dialogs}>

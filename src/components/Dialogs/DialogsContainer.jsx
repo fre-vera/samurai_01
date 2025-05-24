@@ -2,10 +2,10 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { sendMessageCreator, updateNewMessageBodyCreator } from '../redux/dialogs-reducer';
 import { Dialogs } from './Dialogs';
+import { withAuthRedirect } from '../hoc/withAuthRedirect';
 
 export const DialogsContainer = () => {
   const dialogsPage = useSelector((store) => store.dialogsPage);
-  const isAuth = useSelector((store) => store.auth.isAuth);
 
   const dispatch = useDispatch();
 
@@ -18,5 +18,7 @@ export const DialogsContainer = () => {
     dispatch(updateNewMessageBodyCreator(body));
   };
 
-  return <Dialogs dialogsPage={dialogsPage} isAuth={isAuth} onSendMessageClick={onSendMessageClick} onNewMessageChange={onNewMessageChange} />;
+  return <Dialogs dialogsPage={dialogsPage} onSendMessageClick={onSendMessageClick} onNewMessageChange={onNewMessageChange} />;
 };
+
+export default withAuthRedirect(DialogsContainer);
