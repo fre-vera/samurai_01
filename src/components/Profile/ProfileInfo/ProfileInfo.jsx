@@ -1,5 +1,5 @@
-import React from 'react';
 import classes from './ProfileInfo.module.scss';
+import { ProfileStatus } from '../ProfileStatus';
 import { Preloader } from '../../Preloader';
 
 export const ProfileInfo = ({ profile }) => {
@@ -7,18 +7,20 @@ export const ProfileInfo = ({ profile }) => {
     return <Preloader />;
   };
 
-
-
   return (
     <div>
-      <div className={classes.imgBlock}>
+      {/* <div className={classes.imgBlock}>
         <img
           src='https://img.freepik.com/free-photo/beautiful-selective-focus-shot-crystal-ball-reflecting-breathtaking-sunset_181624-8579.jpg?t=st=1737911869~exp=1737915469~hmac=ffc18e2db699d9159c5e3a866fe50bad72b72db4d3aac0a95ed7735f4d128151&w=1380'
           alt='sunset'
         />
-      </div>
+      </div> */}
       <div className={classes.descriptionBlock}>
-        <img src={profile.photos.large ? profile.photos.large : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyQQie97-F6biacqWGhT8eoWImHp4xw3ROkw&s'} />
+        <img
+          src={profile.photos.large ? profile.photos.large : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyQQie97-F6biacqWGhT8eoWImHp4xw3ROkw&s'}
+          alt='avatar'
+        />
+        <ProfileStatus status={'dsdsdsd'} />
         <div>{profile.aboutMe ? (
           <>
             <h3>Обо мне:</h3>
