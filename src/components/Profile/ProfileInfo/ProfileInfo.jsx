@@ -2,7 +2,7 @@ import classes from './ProfileInfo.module.scss';
 import { ProfileStatus } from '../ProfileStatus';
 import { Preloader } from '../../Preloader';
 
-export const ProfileInfo = ({ profile }) => {
+export const ProfileInfo = ({ profile, status, updateStatus }) => {
   if (!profile) {
     return <Preloader />;
   };
@@ -20,7 +20,7 @@ export const ProfileInfo = ({ profile }) => {
           src={profile.photos.large ? profile.photos.large : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyQQie97-F6biacqWGhT8eoWImHp4xw3ROkw&s'}
           alt='avatar'
         />
-        <ProfileStatus status={'dsdsdsd'} />
+        <ProfileStatus status={status} updateStatus={updateStatus} />
         <div>{profile.aboutMe ? (
           <>
             <h3>Обо мне:</h3>
