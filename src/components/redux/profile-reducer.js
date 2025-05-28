@@ -4,6 +4,7 @@ const ADD_POST = 'ADD_POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE_NEW_POST_TEXT';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
 const TOGGLE_PROFILE_LOADING = 'TOGGLE_PROFILE_LOADING';
+const SET_STATUS = 'SET_STATUS';
 
 const initialState = {
   posts: [
@@ -13,6 +14,7 @@ const initialState = {
   newPostText: 'it-kamasutra.com',
   profile: null,
   isLoading: false,
+  status: '',
 };
 
 export const profileReducer = (state = initialState, action) => {
@@ -43,6 +45,11 @@ export const profileReducer = (state = initialState, action) => {
         ...state,
         isLoading: action.isLoading,
       };
+    case SET_STATUS:
+      return {
+        ...state,
+        status: action.status,
+      };
     default:
       return state;
   }
@@ -53,6 +60,7 @@ export const updateNewPostTextActionCreator = (newText) =>
   ({ type: UPDATE_NEW_POST_TEXT, newText });
 export const setUserProfile = (profile) => ({ type: SET_USER_PROFILE, profile });
 export const toggleProfileLoading = (isLoading) => ({ type: TOGGLE_PROFILE_LOADING, isLoading });
+export const setStatus = (status) => ({ type: SET_STATUS, status });
 
 export const profileThunk = (userId) => async (dispatch) => {
   dispatch(toggleProfileLoading(true));
@@ -63,5 +71,25 @@ export const profileThunk = (userId) => async (dispatch) => {
     console.error('Ошибка при загрузке профиля:', error);
   } finally {
     dispatch(toggleProfileLoading(false));
+  }
+};
+
+export const getStatus = (userId) => async (dispatch) => {
+  try {
+    const response = await profileApi.getStatus(userId);
+    dispatch(setStatus(response));
+  } catch (error) {
+    console.error('Ошибка при загрузке профиля:', error);
+  }
+};
+
+export const updateStatus = (status) => async (dispatch) => {
+  try {
+    const response = await profileApi.updateStatus(status);
+    if (response.resultCode === 0) {
+      dispatch(setStatus(status));
+    }
+  } catch (error) {
+    console.error('Ошибка при обновлении статуса:', error);
   }
 };
