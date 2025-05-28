@@ -8,6 +8,7 @@
     "cra-template": "1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.56.4",
     "react-redux": "^9.2.0",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
