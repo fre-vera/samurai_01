@@ -1,6 +1,6 @@
-import React from 'react';
 import classes from './MyPosts.module.scss';
 import { Post } from './Post';
+import { useForm } from 'react-hook-form';
 
 export const MyPosts = (props) => {
 
@@ -11,15 +11,7 @@ export const MyPosts = (props) => {
       <div className={classes.postsBlock}>
         <h3>My posts</h3>
       </div>
-      <div>
-        <textarea
-          onChange={props.onPostChange}
-          value={props.profilePage.newPostText}
-        />
-      </div>
-      <div>
-        <button onClick={props.addPost}>Add post</button>
-      </div>
+      <AddNewPostForm addPost={props.addPost} />
       <div>
         New post
       </div>
@@ -27,5 +19,34 @@ export const MyPosts = (props) => {
         { postsElements }
       </div>
     </div>
+  );
+};
+
+export const AddNewPostForm = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const onSubmit = (data) => {
+    props.addPost(data.newPostText);
+    reset();
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <textarea
+          {...register('newPostText', { required: true })}
+          placeholder="Введите ваше сообщение...">
+        </textarea>
+        {errors.newPostText && <span>Нельзя отправить пустое сообщение!</span>}
+      </div>
+      <div>
+        <button>Отправить сообщение</button>
+      </div>
+    </form>
   );
 };
