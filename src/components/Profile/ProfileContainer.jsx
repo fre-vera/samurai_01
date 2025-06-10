@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { Profile } from './Profile';
-import { Preloader } from '../Preloader';
+import { Preloader } from '../../components/common/Preloader';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getStatus, updateStatus, profileThunk } from '../redux/profile-reducer';
