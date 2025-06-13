@@ -1,6 +1,6 @@
 import classes from './ProfileInfo.module.scss';
 import { ProfileStatus } from '../ProfileStatus';
-import { Preloader } from '../../Preloader';
+import { Preloader } from '../../common/Preloader';
 
 export const ProfileInfo = ({ profile, status, updateStatus }) => {
   if (!profile) {

@@ -9,16 +9,11 @@ export const DialogsContainer = () => {
 
   const dispatch = useDispatch();
 
-  const onSendMessageClick = () => {
-    dispatch(sendMessageCreator());
+  const onSendMessageClick = (message) => {
+    dispatch(sendMessageCreator(message));
   };
 
-  const onNewMessageChange = (event) => {
-    const body = event.target.value;
-    dispatch(updateNewMessageBodyCreator(body));
-  };
-
-  return <Dialogs dialogsPage={dialogsPage} onSendMessageClick={onSendMessageClick} onNewMessageChange={onNewMessageChange} />;
+  return <Dialogs dialogsPage={dialogsPage} onSendMessageClick={onSendMessageClick} />;
 };
 
 export default withAuthRedirect(DialogsContainer);
