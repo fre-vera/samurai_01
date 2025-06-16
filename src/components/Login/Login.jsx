@@ -2,18 +2,21 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeOffIcon } from '../assets/icons';
 import classes from './Login.module.scss';
+import { validationEmail } from '../utils/validationRules';
+import { validationPassword } from '../utils/validationRules';
 
-export const Login = () => {
+export const Login = ({ login }) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({ mode: 'onBlur' });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data) => {
-    console.log(data);
+    const { email, password, rememberMe } = data;
+    login(email, password, rememberMe);
   };
 
   return (
@@ -24,18 +27,12 @@ export const Login = () => {
           <label className={classes.label}>Email</label>
           <input
             type="email"
-            className={`${classes.input} ${errors.login ? classes.inputError : ''}`}
+            className={`${classes.input} ${errors.email ? classes.inputError : ''}`}
             placeholder="example@mail.com"
-            {...register('login', {
-              required: 'Введите Email, с помощью которого Вы регистрировались',
-              pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: 'Введите корректный Email',
-              },
-            })}
+            {...register('email', validationEmail)}
           />
-          {errors.login && (
-            <div className={classes.error}>{errors.login.message}</div>
+          {errors.email && (
+            <div className={classes.error}>{errors.email.message}</div>
           )}
         </div>
         <div className={classes.formGroup}>
@@ -45,13 +42,7 @@ export const Login = () => {
               type={showPassword ? 'text' : 'password'}
               className={`${classes.input} ${errors.password ? classes.inputError : ''}`}
               placeholder="••••••••"
-              {...register('password', {
-                required: 'Введите пароль',
-                maxLength: {
-                  value: 64,
-                  message: 'Очень длинный пароль (максимум - 64 символа)',
-                },
-              })}
+              {...register('password', validationPassword)}
             />
             <button
               type="button"
