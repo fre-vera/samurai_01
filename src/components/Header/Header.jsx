@@ -1,4 +1,3 @@
-import React from 'react';
 import classes from './Header.module.scss';
 import { NavLink } from 'react-router-dom';
 
@@ -12,9 +11,10 @@ export const Header = (props) => {
         style={{ cursor: 'pointer' }}
       />
       <div className={classes.loginBlock}>
-        { props.isAuth ? props.login
-          : <NavLink to={'/login'}>Войти</NavLink>}
-      </div>
+        { props.isAuth
+          ? <div>{props.login} <button onClick={props.logout}>Выйти</button></div>
+          : <NavLink to={'/login'}>Войти</NavLink>
+        } </div>
     </header>
   );
 };
