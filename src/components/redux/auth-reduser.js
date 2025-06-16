@@ -1,4 +1,4 @@
-import { headerApi } from '../../api/api';
+import { authApi } from '../../api/api';
 
 const SET_USER_DATA = 'SET_USER_DATA';
 
@@ -14,23 +14,50 @@ export const authReducer = (state = initialState, action) => {
     case SET_USER_DATA:
       return {
         ...state,
-        ...action.data,
-        isAuth: true,
+        ...action.payload,
       };
     default:
       return state;
   }
 };
 
-export const setAuthUserData = (userId, email, login) => ({ type: SET_USER_DATA, data: { userId, email, login } });
+export const setAuthUserData = (userId, email, login, isAuth) => ({ type: SET_USER_DATA, payload: { userId, email, login, isAuth } });
 
 export const getAuthUserData = () => {
   return (dispatch) => {
-    headerApi.getAuth()
+    authApi.getAuth()
       .then((data) => {
         if (data.resultCode === 0) {
           const { id, email, login } = data.data;
-          dispatch(setAuthUserData(id, email, login));
+          dispatch(setAuthUserData(id, email, login, true));
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка при получении данных авторизации:', error);
+      });
+  };
+};
+
+export const login = (email, password, rememberMe) => {
+  return (dispatch) => {
+    authApi.login(email, password, rememberMe)
+      .then((data) => {
+        if (data.resultCode === 0) {
+          dispatch(getAuthUserData());
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка при получении данных авторизации:', error);
+      });
+  };
+};
+
+export const logout = () => {
+  return (dispatch) => {
+    authApi.logout()
+      .then((data) => {
+        if (data.resultCode === 0) {
+          dispatch(setAuthUserData(null, null, null, false));
         }
       })
       .catch((error) => {
