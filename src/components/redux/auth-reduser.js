@@ -38,30 +38,31 @@ export const getAuthUserData = () => {
   };
 };
 
-export const login = (email, password, rememberMe) => {
-  return (dispatch) => {
-    authApi.login(email, password, rememberMe)
-      .then((data) => {
-        if (data.resultCode === 0) {
-          dispatch(getAuthUserData());
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при получении данных авторизации:', error);
-      });
+export const login = (email, password, rememberMe, setError) => {
+  return async (dispatch) => {
+    try {
+      const data = await authApi.login(email, password, rememberMe);
+      if (data.resultCode === 0) {
+        dispatch(getAuthUserData());
+      } else {
+        const message = data.messages.length > 0 ? data.messages[0] : 'Some error';
+        setError('email', { type: 'manual', message });
+      }
+    } catch (error) {
+      console.error('Ошибка при получении данных авторизации:', error);
+    }
   };
 };
 
 export const logout = () => {
-  return (dispatch) => {
-    authApi.logout()
-      .then((data) => {
-        if (data.resultCode === 0) {
-          dispatch(setAuthUserData(null, null, null, false));
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при получении данных авторизации:', error);
-      });
+  return async (dispatch) => {
+    try {
+      const data = await authApi.logout();
+      if (data.resultCode === 0) {
+        dispatch(setAuthUserData(null, null, null, false));
+      }
+    } catch (error) {
+      console.error('Ошибка при получении данных авторизации:', error);
+    }
   };
 };
