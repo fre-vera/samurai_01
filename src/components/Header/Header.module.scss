@@ -1,20 +1,50 @@
 .header {
   grid-area: h;
   background-color: gold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 
   img {
     width: 45px;
+    cursor: pointer;
   }
 }
 
 .loginBlock {
-  float: right;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
   font-size: 20px;
   font-weight: 400;
 
   a {
     text-decoration: none;
     color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  button {
+    background: none;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #ff4d4d;
+      background-color: rgba(255, 77, 77, 0.1);
+    }
   }
 }
