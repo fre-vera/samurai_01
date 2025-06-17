@@ -11,9 +11,9 @@ export const LoginContainer = () => {
 
   const userId = useSelector((state) => state.auth.userId);
 
-  const handleLogin = async (email, password, rememberMe) => {
+  const handleLogin = async (email, password, rememberMe, setError) => {
     try {
-      await dispatch(login(email, password, rememberMe));
+      await dispatch(login(email, password, rememberMe, setError));
     } catch (error) {
       console.error('Login failed:', error);
     }

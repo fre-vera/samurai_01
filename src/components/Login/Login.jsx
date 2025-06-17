@@ -10,19 +10,21 @@ export const Login = ({ login }) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm({ mode: 'onBlur' });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data) => {
     const { email, password, rememberMe } = data;
-    login(email, password, rememberMe);
+    login(email, password, rememberMe, setError);
   };
 
   return (
     <div className={classes.wrapper}>
       <h1 className={classes.title}>Войти на сайт</h1>
       <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+        {/* email */}
         <div className={classes.formGroup}>
           <label className={classes.label}>Email</label>
           <input
@@ -35,6 +37,7 @@ export const Login = ({ login }) => {
             <div className={classes.error}>{errors.email.message}</div>
           )}
         </div>
+        {/* password */}
         <div className={classes.formGroup}>
           <label className={classes.label}>Пароль</label>
           <div className={classes.passwordInputWrapper}>
@@ -60,16 +63,18 @@ export const Login = ({ login }) => {
             <div className={classes.error}>{errors.password.message}</div>
           )}
         </div>
+        {/* checkbox */}
         <div className={classes.checkboxContainer}>
           <label className={classes.checkboxLabel}>
             <input
               type="checkbox"
               className={classes.regularCheckbox}
-              {...register('rememberME')}
+              {...register('rememberMe')}
             />
             Запомнить меня
           </label>
         </div>
+        {/* button */}
         <button
           type="submit"
           className={classes.submitButton}
