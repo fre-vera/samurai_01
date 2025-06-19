@@ -1,6 +1,6 @@
-import React from 'react';
 import classes from './MyPosts.module.scss';
 import { Post } from './Post';
+import { TextareaForm } from '../../common/TextareaForm';
 
 export const MyPosts = (props) => {
 
@@ -11,18 +11,11 @@ export const MyPosts = (props) => {
       <div className={classes.postsBlock}>
         <h3>My posts</h3>
       </div>
-      <div>
-        <textarea
-          onChange={props.onPostChange}
-          value={props.profilePage.newPostText}
-        />
-      </div>
-      <div>
-        <button onClick={props.addPost}>Add post</button>
-      </div>
-      <div>
-        New post
-      </div>
+      <TextareaForm
+        onSubmitHandler={props.addPost}
+        name="newPostText"
+        placeholder="Введите ваше сообщение..."
+      />
       <div className={classes.posts}>
         { postsElements }
       </div>
