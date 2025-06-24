@@ -4,7 +4,6 @@ import { Preloader } from '../../components/common/Preloader';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getStatus, updateStatus, profileThunk } from '../redux/profile-reducer';
-import { withAuthRedirect } from '../hoc/withAuthRedirect';
 
 export const ProfileContainer = () => {
   const dispatch = useDispatch();
@@ -28,5 +27,3 @@ export const ProfileContainer = () => {
 
   return <Profile profile={profile} status={status} updateStatus={onUpdateStatus} />;
 };
-
-export default withAuthRedirect(ProfileContainer);
