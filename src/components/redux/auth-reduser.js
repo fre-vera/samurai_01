@@ -1,12 +1,14 @@
 import { authApi } from '../../api/api';
 
 const SET_USER_DATA = 'SET_USER_DATA';
+const SET_INITIALIZED = 'SET_INITIALIZED';
 
 const initialState = {
   userId: null,
   email: null,
   login: null,
   isAuth: false,
+  isInitialized: false,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -16,13 +18,20 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         ...action.payload,
       };
+    case SET_INITIALIZED:
+      return {
+        ...state,
+        isInitialized: action.payload,
+      };
     default:
       return state;
   }
 };
 
+// Action creators
 export const setAuthUserData = (userId, email, login, isAuth) => ({ type: SET_USER_DATA, payload: { userId, email, login, isAuth } });
-
+export const setInitialized = (value) => ({ type: SET_INITIALIZED, payload: value });
+// Thunks
 export const getAuthUserData = () => {
   return (dispatch) => {
     authApi.getAuth()
@@ -39,11 +48,13 @@ export const getAuthUserData = () => {
 };
 
 export const login = (email, password, rememberMe, setError) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
       const data = await authApi.login(email, password, rememberMe);
       if (data.resultCode === 0) {
-        dispatch(getAuthUserData());
+        await dispatch(getAuthUserData());
+        const userId = getState().auth.userId;
+        return userId;
       } else {
         const message = data.messages.length > 0 ? data.messages[0] : 'Some error';
         setError('email', { type: 'manual', message });
