@@ -1,4 +1,3 @@
-import React from 'react';
 import classes from './Users.module.scss';
 import userPhoto from '../assets/images/avatar.jpg';
 import { Preloader } from '../common/Preloader';

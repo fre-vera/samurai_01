@@ -9,17 +9,30 @@ import {
   followUserThunk,
   unFollowUserThunk,
 } from '../redux/users-reducer';
+import {
+  selectUsersPage,
+  selectPageSize,
+  selectTotalUsersCount,
+  selectCurrentPage,
+  selectFollowingInProgress,
+} from '../redux/selectors/userSelectors';
+import { Preloader } from '../common/Preloader';
 
 export const UsersContainer = () => {
-  const usersPage = useSelector((store) => store.usersPage);
+  const usersPage = useSelector(selectUsersPage);
+  const totalUsersCount = useSelector(selectTotalUsersCount);
+  const pageSize = useSelector(selectPageSize);
+  const currentPage = useSelector(selectCurrentPage);
+  const followingInProgress = useSelector(selectFollowingInProgress);
+
   const dispatch = useDispatch();
 
-  const pagesCount = Math.ceil(usersPage.totalUsersCount / usersPage.pageSize);
+  const pagesCount = Math.ceil(totalUsersCount / pageSize);
 
   const handlePageChange = (pageNumber) => {
     dispatch(setCurrentPageAC(pageNumber));
     dispatch(setIsUsersLoadingAC(true));
-    dispatch(getUsersThunkCreator(pageNumber, usersPage.pageSize));
+    dispatch(getUsersThunkCreator(pageNumber, pageSize)); //вынос
   };
 
   const handleFollow = (userId) => {
@@ -34,8 +47,8 @@ export const UsersContainer = () => {
 
   useEffect(() => {
     dispatch(setIsUsersLoadingAC(true));
-    dispatch(getUsersThunkCreator(usersPage.currentPage, usersPage.pageSize));
-  }, [dispatch, usersPage.currentPage, usersPage.pageSize]);
+    dispatch(getUsersThunkCreator(currentPage, pageSize));  //вынос
+  }, [dispatch, currentPage, pageSize]);  //вынос
 
   return (
     <Users
