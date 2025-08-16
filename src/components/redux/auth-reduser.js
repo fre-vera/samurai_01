@@ -32,19 +32,17 @@ export const authReducer = (state = initialState, action) => {
 export const setAuthUserData = (userId, email, login, isAuth) => ({ type: SET_USER_DATA, payload: { userId, email, login, isAuth } });
 export const setInitialized = (value) => ({ type: SET_INITIALIZED, payload: value });
 // Thunks
-export const getAuthUserData = () => {
-  return (dispatch) => {
-    authApi.getAuth()
-      .then((data) => {
-        if (data.resultCode === 0) {
-          const { id, email, login } = data.data;
-          dispatch(setAuthUserData(id, email, login, true));
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при получении данных авторизации:', error);
-      });
-  };
+export const getAuthUserData = () => (dispatch) => {
+  return authApi.getAuth()
+    .then((data) => {
+      if (data.resultCode === 0) {
+        const { id, email, login } = data.data;
+        dispatch(setAuthUserData(id, email, login, true));
+      }
+    })
+    .catch((error) => {
+      console.error('Ошибка при получении данных авторизации:', error);
+    });
 };
 
 export const login = (email, password, rememberMe, setError) => {
