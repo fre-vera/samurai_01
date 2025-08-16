@@ -6,7 +6,7 @@ import { logout } from '../redux/auth-reduser';
 export const HeaderContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuth, login, userId } = useSelector((state) => state.auth);
+  const { isAuth, login } = useSelector((state) => state.auth);
 
   const handleLogoClick = () => {
     navigate('/profile');
