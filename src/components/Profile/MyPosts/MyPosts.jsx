@@ -10,7 +10,6 @@ export const MyPosts = React.memo((props) => {
       <Post key={post.id} message={post.message} likesCount={post.likesCount}/>));
   }, [props.posts]);
 
-  console.log('Render');
   return (
     <div>
       <div className={classes.postsBlock}>
