@@ -1,7 +1,5 @@
 import { authApi } from '../../api/api';
-
-const SET_USER_DATA = 'SET_USER_DATA';
-const SET_INITIALIZED = 'SET_INITIALIZED';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   userId: null,
@@ -11,33 +9,34 @@ const initialState = {
   isInitialized: false,
 };
 
-export const authReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case SET_USER_DATA:
-      return {
-        ...state,
-        ...action.payload,
-      };
-    case SET_INITIALIZED:
-      return {
-        ...state,
-        isInitialized: action.payload,
-      };
-    default:
-      return state;
-  }
-};
+export const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    setAuthUserData: (state, action) => {
+      const { userId, email, login, isAuth } = action.payload;
+      state.userId = userId;
+      state.email = email;
+      state.login = login;
+      state.isAuth = isAuth;
+    },
+    setInitialized: (state, action) => {
+      const { value } = action.payload;
+      state.isInitialized = value;
+    },
+  },
+});
 
-// Action creators
-export const setAuthUserData = (userId, email, login, isAuth) => ({ type: SET_USER_DATA, payload: { userId, email, login, isAuth } });
-export const setInitialized = (value) => ({ type: SET_INITIALIZED, payload: value });
+// // Action creators
+export const { setAuthUserData,  setisInitialized } = authSlice.actions;
+
 // Thunks
 export const getAuthUserData = () => (dispatch) => {
   return authApi.getAuth()
     .then((data) => {
       if (data.resultCode === 0) {
         const { id, email, login } = data.data;
-        dispatch(setAuthUserData(id, email, login, true));
+        dispatch(setAuthUserData({ userId: id, email, login, isAuth: true }));
       }
     })
     .catch((error) => {
@@ -68,7 +67,7 @@ export const logout = () => {
     try {
       const data = await authApi.logout();
       if (data.resultCode === 0) {
-        dispatch(setAuthUserData(null, null, null, false));
+        dispatch(setAuthUserData({ userId: null, email: null, login: null, isAuth: false }));
       }
     } catch (error) {
       console.error('Ошибка при получении данных авторизации:', error);

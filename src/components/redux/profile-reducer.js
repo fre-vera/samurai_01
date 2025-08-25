@@ -1,10 +1,5 @@
 import { profileApi } from '../../api/api';
-
-const ADD_POST = 'ADD_POST';
-const SET_USER_PROFILE = 'SET_USER_PROFILE';
-const TOGGLE_PROFILE_LOADING = 'TOGGLE_PROFILE_LOADING';
-const SET_STATUS = 'SET_STATUS';
-const DELETE_POST = 'DELETE_POST';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   posts: [
@@ -16,49 +11,39 @@ const initialState = {
   status: '',
 };
 
-export const profileReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ADD_POST:
-      const newPost = {
+export const profileSlice = createSlice({
+  name: 'profile',
+  initialState,
+  reducers: {
+    addPostActionCreator: (state, action) => {
+      state.posts.push({
         id: state.posts.length + 1,
-        message: action.newPostText,
-        likesCount: 0,
-      };
-      return {
-        ...state,
-        posts: [...state.posts, newPost],
-      };
-    case SET_USER_PROFILE:
-      return {
-        ...state,
-        profile: action.profile,
-      };
-    case TOGGLE_PROFILE_LOADING:
-      return {
-        ...state,
-        isLoading: action.isLoading,
-      };
-    case SET_STATUS:
-      return {
-        ...state,
-        status: action.status,
-      };
-    case DELETE_POST:
-      return {
-        ...state,
-        posts: state.posts.filter((post) => post.id !== action.postId),
-      };
-    default:
-      return state;
-  }
-};
+        message: action.payload,
+      });
+    },
+    setUserProfile: (state, action) => {
+      state.profile = action.payload;
+    },
+    toggleProfileLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setStatus: (state, action) => {
+      state.status = action.payload;
+    },
+    deletePost: (state, action) => {
+      state.posts = state.posts.filter((post) => post.id !== action.payload);
+    },
+  },
+});
 
 // Action creators
-export const addPostActionCreator = (newPostText) => ({ type: ADD_POST, newPostText });
-export const setUserProfile = (profile) => ({ type: SET_USER_PROFILE, profile });
-export const toggleProfileLoading = (isLoading) => ({ type: TOGGLE_PROFILE_LOADING, isLoading });
-export const setStatus = (status) => ({ type: SET_STATUS, status });
-export const deletePost = (postId) => ({ type: DELETE_POST, postId });
+export const {
+  addPostActionCreator,
+  setUserProfile,
+  toggleProfileLoading,
+  setStatus,
+  deletePost,
+} = profileSlice.actions;
 
 // Thunks
 export const profileThunk = (userId) => async (dispatch) => {
