@@ -1,25 +1,23 @@
 import { getAuthUserData } from './auth-reduser';
-
-const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   initialized: false,
 };
 
-export const appReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case INITIALIZED_SUCCESS:
-      return {
-        ...state,
-        initialized: true,
-      };
-    default:
-      return state;
-  }
-};
+export const appSlice = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    initializedSuccess: (state) => {
+      state.initialized = true;
+    },
+  },
+},
+);
 
-// Action creators
-export const initializedSuccess = () => ({ type: INITIALIZED_SUCCESS });
+// // Action creators
+export const { initializedSuccess } = appSlice.actions;
 
 // Thunks
 export const initializeApp = () => async (dispatch) => {

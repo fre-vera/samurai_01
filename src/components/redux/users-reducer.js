@@ -1,12 +1,13 @@
 import { usersAPI } from '../../api/api';
+import { createSlice } from '@reduxjs/toolkit';
 
-const UNFOLLOW = 'UNFOLLOW';
-const FOLLOW = 'FOLLOW';
-const SET_USERS = 'SET_USERS';
-const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
-const SET_IS_USERS_LOADING = 'SET_IS_USERS_LOADING';
-const TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS';
+// const UNFOLLOW = 'UNFOLLOW';
+// const FOLLOW = 'FOLLOW';
+// const SET_USERS = 'SET_USERS';
+// const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
+// const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
+// const SET_IS_USERS_LOADING = 'SET_IS_USERS_LOADING';
+// const TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS';
 
 const initialState = {
   users: [],
@@ -17,80 +18,51 @@ const initialState = {
   followingInProgress: [],
 };
 
-export const usersReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case UNFOLLOW:
-      return {
-        ...state,
-        users: state.users.map((user) => {
-          if (user.id === action.userId) {
-            return { ...user, followed: false };
-          }
-          return user;
-        }),
-      };
-    case FOLLOW:
-      return {
-        ...state,
-        users: state.users.map((user) => {
-          if (user.id === action.userId) {
-            return { ...user, followed: true };
-          }
-          return user;
-        }),
-      };
-    case SET_USERS:
-      return {
-        ...state,
-        users: action.users,
-      };
-    case SET_CURRENT_PAGE:
-      return {
-        ...state,
-        currentPage: action.currentPage,
-      };
-    case SET_TOTAL_USERS_COUNT:
-      return {
-        ...state,
-        totalUsersCount: action.totalUsersCount,
-      };
-    case SET_IS_USERS_LOADING:
-      return {
-        ...state,
-        isUsersLoading: action.isUsersLoading,
-      };
-    case TOGGLE_IS_FOLLOWING_PROGRESS:
-      return {
-        ...state,
-        followingInProgress: action.isFetching
-          ? [...state.followingInProgress, action.userId]
-          : state.followingInProgress.filter((id) => id !== action.userId),
-      };
-    default:
-      return state;
-  }
-};
+export const usersSlice = createSlice({
+  name: 'users',
+  initialState,
+  reducers: {
+    unFollowAC: (state, action) => {
+      state.users = state.users.map((user) =>
+        user.id === action.payload ? { ...user, followed: false } : user,
+      );
+    },
+    followAC: (state, action) => {
+      state.users = state.users.map((user) =>
+        user.id === action.payload ? { ...user, followed: true } : user,
+      );
+    },
+    setUsersAC: (state, action) => {
+      state.users = action.payload;
+    },
+    setCurrentPageAC: (state, action) => {
+      state.currentPage = action.payload;
+    },
+    setTotalUsersCountAC: (state, action) => {
+      state.totalUsersCount = action.payload;
+    },
+    setIsUsersLoadingAC: (state, action) => {
+      state.isUsersLoading = action.payload;
+    },
+    toggleFollowingProgress: (state, action) => {
+      const { isFetching, userId } = action.payload;
+      state.followingInProgress = isFetching
+        ? [...state.followingInProgress, userId]
+        : state.followingInProgress.filter((id) => id !== userId);
+    },
+  },
+});
+
 // Action creators
-export const unFollowAC = (userId) => ({ type: UNFOLLOW, userId });
-export const followAC = (userId) => ({ type: FOLLOW, userId });
-export const setUsersAC = (users) => ({ type: SET_USERS, users });
-export const setCurrentPageAC = (currentPage) => ({
-  type: SET_CURRENT_PAGE,
-  currentPage,
-});
-export const setTotalUsersCountAC = (totalUsersCount) => ({
-  type: SET_TOTAL_USERS_COUNT,
-  totalUsersCount,
-});
-export const setIsUsersLoadingAC = (isUsersLoading) => ({
-  type: SET_IS_USERS_LOADING,
-  isUsersLoading,
-});
-export const toggleFollowingProgress = (isFetching, userId) => ({
-  type: TOGGLE_IS_FOLLOWING_PROGRESS,
-  isFetching,
-  userId,
-});
+export const {
+  unFollowAC,
+  followAC,
+  setUsersAC,
+  setCurrentPageAC,
+  setTotalUsersCountAC,
+  setIsUsersLoadingAC,
+  toggleFollowingProgress,
+} = usersSlice.actions;
 
 // Thunks
 export const getUsersThunkCreator = (pageNumber, pageSize) => {
@@ -117,7 +89,7 @@ export const followUserThunk = (userId) => {
         console.error('Ошибка при подписке:', error);
       })
       .finally(() => {
-        dispatch(toggleFollowingProgress(false, userId));
+        dispatch(toggleFollowingProgress(true, userId));
       });
   };
 };

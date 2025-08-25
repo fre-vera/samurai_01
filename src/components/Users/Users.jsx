@@ -2,36 +2,36 @@ import classes from './Users.module.scss';
 import userPhoto from '../assets/images/avatar.jpg';
 import { Preloader } from '../common/Preloader';
 import { NavLink } from 'react-router-dom';
+import { Pagination } from '../common/Pagination';
 
-export const Users = (props) => {
-  const pages = Array.from({ length: props.pagesCount }, (_, i) => i + 1);
-  const curPage = props.currentPage;
-  let slicedPages;
-  if (curPage - 3 < 0) {
-    slicedPages = pages.slice(0, 5);
-  } else {
-    slicedPages = pages.slice(curPage - 3, curPage + 2);
-  }
-
+export const Users = ({
+  usersPage,
+  followUser,
+  unFollowUser,
+  pagesCount,
+  currentPage,
+  setCurrentPage,
+  toggleFollowingProgress,
+}) => {
   return (
     <div className={classes.usersContainer}>
-      <Preloader isActive={props.usersPage.isUsersLoading} />
-      <div className={classes.pagination}>
-        {slicedPages.map((page) => (
-          <span
-            key={page}
-            onClick={() => props.setCurrentPage(page)}
-            className={`${classes.pageNumber} ${props.currentPage === page ? classes.active : ''}`}
-          >
-            {page}
-          </span>
-        ))}
-      </div>
-      {props.usersPage.users.map((user) => (
+
+      <Pagination
+        totalPages={pagesCount}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
+
+      <Preloader isActive={usersPage.isUsersLoading} />
+
+      {usersPage.users.map((user) => (
         <div key={user.id} className={classes.user}>
           <div className={classes.avatar}>
             <NavLink to={`/profile/${user.id}`}>
-              <img src={user.photos.small !== null ? user.photos.small : userPhoto} alt={user.name} />
+              <img
+                src={user.photos.small || userPhoto}
+                alt={user.name || 'User avatar'}
+              />
             </NavLink>
           </div>
           <div className={classes.userInfo}>
@@ -41,16 +41,16 @@ export const Users = (props) => {
           <div>
             {user.followed ? (
               <button
-                disabled={props.toggleFollowingProgress.includes(user.id)}
-                onClick={() => props.unFollowUser(user.id)}
+                disabled={toggleFollowingProgress.includes(user.id)}
+                onClick={() => unFollowUser(user.id)}
                 className={`${classes.button} ${classes.unfollow}`}
               >
                 Unfollow
               </button>
             ) : (
               <button
-                disabled={props.toggleFollowingProgress.includes(user.id)}
-                onClick={() => props.followUser(user.id)}
+                disabled={toggleFollowingProgress.includes(user.id)}
+                onClick={() => followUser(user.id)}
                 className={`${classes.button} ${classes.follow}`}
               >
                 Follow

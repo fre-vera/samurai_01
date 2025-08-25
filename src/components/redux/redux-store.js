@@ -1,19 +1,19 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { dialogsReducer } from './dialogs-reducer';
-import { profileReducer } from './profile-reducer';
+import { dialogsSlice } from './dialogs-reducer';
+import { profileSlice } from './profile-reducer';
 import { sidebarReducer } from './sidebar-reducer';
-import { usersReducer } from './users-reducer';
-import { authReducer } from './auth-reduser';
+import { usersSlice } from './users-reducer';
+import { authSlice } from './auth-reduser';
 import { thunk } from 'redux-thunk';
-import { appReducer } from './app-reduser';
+import { appSlice } from './app-reduser';
 
 export const reducer = combineReducers({
-  profilePage: profileReducer,
-  dialogsPage: dialogsReducer,
+  profilePage: profileSlice.reducer,
+  dialogsPage: dialogsSlice.reducer,
   sidebar: sidebarReducer,
-  usersPage: usersReducer,
-  auth: authReducer,
-  app: appReducer,
+  usersPage: usersSlice.reducer,
+  auth: authSlice.reducer,
+  app: appSlice.reducer,
 });
 
 export const store = configureStore({
