@@ -15,9 +15,8 @@ export const Login = ({ onLogin }) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => {
-    const { email, password, rememberMe } = data;
-    onLogin(email, password, rememberMe, setError);
+  const onSubmit = async (data) => {
+    await onLogin(data, setError);
   };
 
   return (
