@@ -8,8 +8,14 @@ import { Login } from './Login';
 export const LoginContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogin = (email, password, rememberMe, setError) => {
-    dispatch(login(email, password, rememberMe, setError));
+  const handleLogin = async (formData, setError) => {
+    try {
+      await dispatch(login(formData)).unwrap();
+    } catch (error) {
+      if (error && error.message) {
+        setError('email', { type: 'manual', message: error.message });
+      }
+    }
   };
 
   const userId = useSelector((state) => state.auth.userId);
