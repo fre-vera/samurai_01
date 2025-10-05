@@ -3,12 +3,9 @@ import { useDispatch } from 'react-redux';
 import { Users } from './Users';
 import { useEffect } from 'react';
 import { setCurrentPageAC } from '../redux/users-reducer';
-import { setIsUsersLoadingAC } from '../redux/users-reducer';
-import { toggleFollowingProgress } from '../redux/users-reducer';
 import { getUsersThunkCreator } from '../redux/users-reducer';
 import { followUserThunk } from '../redux/users-reducer';
 import { unFollowUserThunk } from '../redux/users-reducer';
-import { changePageThunk } from '../redux/users-reducer';
 import { selectUsersPage } from '../redux/selectors/userSelectors';
 import { selectPageSize } from '../redux/selectors/userSelectors';
 import { selectTotalUsersCount } from '../redux/selectors/userSelectors';
@@ -26,7 +23,7 @@ export const UsersContainer = () => {
 
   const handlePageChange = (pageNumber) => {
     dispatch(setCurrentPageAC(pageNumber));
-    dispatch(getUsersThunkCreator(pageNumber, pageSize));
+    dispatch(getUsersThunkCreator({ pageNumber, pageSize }));
   };
 
   const handleFollow = (userId) => {
@@ -38,8 +35,7 @@ export const UsersContainer = () => {
   };
 
   useEffect(() => {
-    dispatch(setIsUsersLoadingAC(true));
-    dispatch(getUsersThunkCreator(currentPage, pageSize));
+    dispatch(getUsersThunkCreator({ currentPage, pageSize }));
   }, [dispatch, currentPage, pageSize]);
 
   return (
@@ -50,7 +46,7 @@ export const UsersContainer = () => {
       pagesCount={pagesCount}
       currentPage={currentPage}
       setCurrentPage={handlePageChange}
-      toggleFollowingProgress={usersPage.followingInProgress}
+      followingInProgress={usersPage.followingInProgress}
     />
   );
 };
