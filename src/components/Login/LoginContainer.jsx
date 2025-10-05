@@ -2,24 +2,29 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../redux/auth-reduser';
+import { useEffect } from 'react';
 import { Login } from './Login';
 
 export const LoginContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const userId = useSelector((state) => state.auth.userId);
-
-  const handleLogin = async (email, password, rememberMe, setError) => {
+  const handleLogin = async (formData, setError) => {
     try {
-      await dispatch(login(email, password, rememberMe, setError));
-      if (userId) {
-        navigate(`/profile/${userId}`);
-      }
+      await dispatch(login(formData)).unwrap();
     } catch (error) {
-      console.error('Login failed:', error);
+      if (error && error.message) {
+        setError('email', { type: 'manual', message: error.message });
+      }
     }
   };
 
-  return <Login login={handleLogin} />;
+  const userId = useSelector((state) => state.auth.userId);
+
+  useEffect(() => {
+    if (userId) {
+      navigate(`/profile/${userId}`);
+    }
+  }, [userId, navigate]);
+
+  return <Login onLogin={handleLogin}/>;
 };

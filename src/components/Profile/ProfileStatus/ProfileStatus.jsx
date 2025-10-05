@@ -24,11 +24,17 @@ export const ProfileStatus = (props) => {
     setStatus(e.target.value);
   };
 
+  const onEnter = (e) => {
+    if (e.key === 'Enter') {
+      deactivateEditMode();
+    }
+  };
+
   return (
     <>
       {!editMode && (
         <div>
-          <span onDoubleClick={activateEditMode}>{status || 'No status'}</span>
+          <span onDoubleClick={activateEditMode}>{status || 'Введите статус...'}</span>
         </div>
       )}
 
@@ -37,6 +43,7 @@ export const ProfileStatus = (props) => {
           <input
             autoFocus
             onBlur={deactivateEditMode}
+            onKeyDown={onEnter}
             value={status}
             onChange={onStatusChange}
           />

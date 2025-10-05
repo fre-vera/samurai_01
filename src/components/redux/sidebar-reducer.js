@@ -4,6 +4,6 @@ const initialState = [
   { id: 3, name: 'Sveta', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE6MJGf5aOBXXbTBPdhJjQPWatzY-i7EYObg&s' },
 ];
 
-export const sidebarReducer = (state = initialState, action) => {
+export const sidebarReducer = (state = initialState) => {
   return state;
 };

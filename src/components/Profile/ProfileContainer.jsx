@@ -18,12 +18,16 @@ export const ProfileContainer = () => {
   );
 
   useEffect(() => {
+    if (!userId) return;
     dispatch(profileThunk(userId));
     dispatch(getStatus(userId));
   }, [dispatch, userId]);
-  if (isLoading || !profile) {
-    return <Preloader />;
-  }
 
-  return <Profile profile={profile} status={status} updateStatus={onUpdateStatus} />;
+  if (isLoading) return <Preloader />;
+  if (!profile) return <div>Профиль не найден</div>;
+
+  return <Profile
+    profile={profile}
+    status={status}
+    updateStatus={onUpdateStatus} />;
 };

@@ -1,33 +1,39 @@
 import { getAuthUserData } from './auth-reduser';
-
-const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
+import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
   initialized: false,
 };
 
-export const appReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case INITIALIZED_SUCCESS:
-      return {
-        ...state,
-        initialized: true,
-      };
-    default:
-      return state;
-  }
-};
-
-// Action creators
-export const initializedSuccess = () => ({ type: INITIALIZED_SUCCESS });
-
 // Thunks
-export const initializeApp = () => async (dispatch) => {
-  try {
-    await dispatch(getAuthUserData());
-  } catch (error) {
-    console.error('Ошибка при получении данных авторизации:', error);
-  } finally {
-    dispatch(initializedSuccess());
-  }
-};
+export const initializeApp = createAsyncThunk(
+  'app/initializeApp',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      await dispatch(getAuthUserData());
+      return true;
+    } catch (error) {
+      return rejectWithValue({
+        message: 'Ошибка при получении данных авторизации',
+        error: error.message,
+      });
+    }
+  },
+);
+
+export const appSlice = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(initializeApp.fulfilled, (state) => {
+        state.initialized = true;
+      })
+      .addCase(initializeApp.rejected, (state) => {
+        state.initialized = true;
+      });
+  },
+},
+);

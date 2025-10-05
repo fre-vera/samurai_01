@@ -1,29 +1,21 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Users } from './Users';
 import { useEffect } from 'react';
-import {
-  setCurrentPageAC,
-  setIsUsersLoadingAC,
-  toggleFollowingProgress,
-  getUsersThunkCreator,
-  followUserThunk,
-  unFollowUserThunk,
-} from '../redux/users-reducer';
-import {
-  selectUsersPage,
-  selectPageSize,
-  selectTotalUsersCount,
-  selectCurrentPage,
-  selectFollowingInProgress,
-} from '../redux/selectors/userSelectors';
-import { Preloader } from '../common/Preloader';
+import { setCurrentPageAC } from '../redux/users-reducer';
+import { getUsersThunkCreator } from '../redux/users-reducer';
+import { followUserThunk } from '../redux/users-reducer';
+import { unFollowUserThunk } from '../redux/users-reducer';
+import { selectUsersPage } from '../redux/selectors/userSelectors';
+import { selectPageSize } from '../redux/selectors/userSelectors';
+import { selectTotalUsersCount } from '../redux/selectors/userSelectors';
+import { selectCurrentPage } from '../redux/selectors/userSelectors';
 
 export const UsersContainer = () => {
   const usersPage = useSelector(selectUsersPage);
   const totalUsersCount = useSelector(selectTotalUsersCount);
   const pageSize = useSelector(selectPageSize);
   const currentPage = useSelector(selectCurrentPage);
-  const followingInProgress = useSelector(selectFollowingInProgress);
 
   const dispatch = useDispatch();
 
@@ -31,24 +23,20 @@ export const UsersContainer = () => {
 
   const handlePageChange = (pageNumber) => {
     dispatch(setCurrentPageAC(pageNumber));
-    dispatch(setIsUsersLoadingAC(true));
-    dispatch(getUsersThunkCreator(pageNumber, pageSize)); //вынос
+    dispatch(getUsersThunkCreator({ pageNumber, pageSize }));
   };
 
   const handleFollow = (userId) => {
-    dispatch(toggleFollowingProgress(true, userId));
     dispatch(followUserThunk(userId));
   };
 
   const handleUnfollow = (userId) => {
-    dispatch(toggleFollowingProgress(true, userId));
     dispatch(unFollowUserThunk(userId));
   };
 
   useEffect(() => {
-    dispatch(setIsUsersLoadingAC(true));
-    dispatch(getUsersThunkCreator(currentPage, pageSize));  //вынос
-  }, [dispatch, currentPage, pageSize]);  //вынос
+    dispatch(getUsersThunkCreator({ currentPage, pageSize }));
+  }, [dispatch, currentPage, pageSize]);
 
   return (
     <Users
@@ -56,9 +44,9 @@ export const UsersContainer = () => {
       followUser={handleFollow}
       unFollowUser={handleUnfollow}
       pagesCount={pagesCount}
-      currentPage={usersPage.currentPage}
+      currentPage={currentPage}
       setCurrentPage={handlePageChange}
-      toggleFollowingProgress={usersPage.followingInProgress}
+      followingInProgress={usersPage.followingInProgress}
     />
   );
 };

@@ -5,7 +5,7 @@ import classes from './Login.module.scss';
 import { validationEmail } from '../utils/validationRules';
 import { validationPassword } from '../utils/validationRules';
 
-export const Login = ({ login }) => {
+export const Login = ({ onLogin }) => {
   const {
     register,
     handleSubmit,
@@ -15,9 +15,8 @@ export const Login = ({ login }) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => {
-    const { email, password, rememberMe } = data;
-    login(email, password, rememberMe, setError);
+  const onSubmit = async (data) => {
+    await onLogin(data, setError);
   };
 
   return (
