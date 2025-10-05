@@ -11,7 +11,7 @@ export const Users = ({
   pagesCount,
   currentPage,
   setCurrentPage,
-  toggleFollowingProgress,
+  followingInProgress,
 }) => {
   return (
     <div className={classes.usersContainer}>
@@ -41,7 +41,7 @@ export const Users = ({
           <div>
             {user.followed ? (
               <button
-                disabled={toggleFollowingProgress.includes(user.id)}
+                disabled={followingInProgress.includes(user.id)}
                 onClick={() => unFollowUser(user.id)}
                 className={`${classes.button} ${classes.unfollow}`}
               >
@@ -49,7 +49,7 @@ export const Users = ({
               </button>
             ) : (
               <button
-                disabled={toggleFollowingProgress.includes(user.id)}
+                disabled={followingInProgress.includes(user.id)}
                 onClick={() => followUser(user.id)}
                 className={`${classes.button} ${classes.follow}`}
               >
