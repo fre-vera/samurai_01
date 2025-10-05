@@ -1,13 +1,5 @@
 import { usersAPI } from '../../api/api';
-import { createSlice } from '@reduxjs/toolkit';
-
-// const UNFOLLOW = 'UNFOLLOW';
-// const FOLLOW = 'FOLLOW';
-// const SET_USERS = 'SET_USERS';
-// const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-// const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
-// const SET_IS_USERS_LOADING = 'SET_IS_USERS_LOADING';
-// const TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   users: [],
@@ -16,97 +8,122 @@ const initialState = {
   currentPage: 1,
   isUsersLoading: false,
   followingInProgress: [],
+  error: null,
 };
+
+export const getUsersThunkCreator = createAsyncThunk(
+  'users/getUsersThunkCreator',
+  async ({ currentPage, pageSize }, { rejectWithValue }) => {
+    try {
+      const response = await usersAPI.getUsers(currentPage, pageSize);
+      return {
+        users: response.items,
+        totalCount: response.totalCount,
+      };
+    } catch (error) {
+      return rejectWithValue({
+        message: 'Ошибка при получении данных пользователей',
+        error: error.message,
+      });
+    }
+  },
+);
+
+export const followUserThunk = createAsyncThunk(
+  'users/followUserThunk',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await usersAPI.follow(userId);
+      if (response.resultCode === 0) {
+        return userId;
+      } else {
+        return rejectWithValue('Ошибка при подписке');
+      }
+    } catch (error) {
+      return rejectWithValue({
+        message: 'Ошибка при подписке',
+        error: error.message,
+      });
+    }
+  },
+);
+
+export const unFollowUserThunk = createAsyncThunk(
+  'users/unFollowUserThunk',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await usersAPI.unfollow(userId);
+      if (response.resultCode === 0) {
+        return userId;
+      } else {
+        return rejectWithValue('Ошибка при отписке');
+      }
+    } catch (error) {
+      return rejectWithValue({
+        message: 'Ошибка при отписке',
+        error: error.message,
+      });
+    }
+  },
+);
 
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
-    unFollowAC: (state, action) => {
-      state.users = state.users.map((user) =>
-        user.id === action.payload ? { ...user, followed: false } : user,
-      );
-    },
-    followAC: (state, action) => {
-      state.users = state.users.map((user) =>
-        user.id === action.payload ? { ...user, followed: true } : user,
-      );
-    },
-    setUsersAC: (state, action) => {
-      state.users = action.payload;
+    // setUsersAC: (state, action) => {
+    //   state.users = action.payload;
+    // },
+    setIsUsersLoadingAC: (state, action) => {
+      state.isUsersLoading = action.payload;
     },
     setCurrentPageAC: (state, action) => {
       state.currentPage = action.payload;
     },
-    setTotalUsersCountAC: (state, action) => {
-      state.totalUsersCount = action.payload;
-    },
-    setIsUsersLoadingAC: (state, action) => {
-      state.isUsersLoading = action.payload;
-    },
-    toggleFollowingProgress: (state, action) => {
-      const { isFetching, userId } = action.payload;
-      state.followingInProgress = isFetching
-        ? [...state.followingInProgress, userId]
-        : state.followingInProgress.filter((id) => id !== userId);
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+    // getUsers
+      .addCase(getUsersThunkCreator.pending, (state) => {
+        state.isUsersLoading = true;
+        state.error = null;
+      })
+      .addCase(getUsersThunkCreator.fulfilled, (state, action) => {
+        state.users = action.payload.users;
+        state.totalUsersCount = action.payload.totalCount;
+        state.isUsersLoading = false;
+      })
+      .addCase(getUsersThunkCreator.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isUsersLoading = false;
+      })
+    // follow
+      .addCase(followUserThunk.fulfilled, (state, action) => {
+        state.users = state.users.map((user) =>
+          user.id === action.payload ? { ...user, followed: true } : user,
+        );
+        state.followingInProgress = state.followingInProgress.filter((id) => id !== action.payload);
+      })
+      .addCase(followUserThunk.rejected, (state, action) => {
+        state.error = action.payload;
+        state.followingInProgress = state.followingInProgress.filter((id) => id !== action.meta.arg);
+      })
+      // unfollow
+      .addCase(unFollowUserThunk.fulfilled, (state, action) => {
+        state.users = state.users.map((user) =>
+          user.id === action.payload ? { ...user, followed: false } : user,
+        );
+        state.followingInProgress = state.followingInProgress.filter((id) => id !== action.payload);
+      })
+      .addCase(unFollowUserThunk.rejected, (state, action) => {
+        state.error = action.payload;
+        state.followingInProgress = state.followingInProgress.filter((id) => id !== action.meta.arg);
+      });
   },
 });
 
 // Action creators
 export const {
-  unFollowAC,
-  followAC,
-  setUsersAC,
   setCurrentPageAC,
-  setTotalUsersCountAC,
   setIsUsersLoadingAC,
-  toggleFollowingProgress,
 } = usersSlice.actions;
-
-// Thunks
-export const getUsersThunkCreator = (pageNumber, pageSize) => {
-  return (dispatch) => {
-    usersAPI.getUsers(pageNumber, pageSize)
-      .then((data) => {
-        dispatch(setUsersAC(data.items));
-        dispatch(setTotalUsersCountAC(data.totalCount));
-      })
-      .catch((error) => console.error('Ошибка загрузки пользователей:', error))
-      .finally(() => dispatch(setIsUsersLoadingAC(false)));
-  };
-};
-
-export const followUserThunk = (userId) => {
-  return (dispatch) => {
-    usersAPI.follow(userId)
-      .then((data) => {
-        if (data.resultCode === 0) {
-          dispatch(followAC(userId));
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при подписке:', error);
-      })
-      .finally(() => {
-        dispatch(toggleFollowingProgress(true, userId));
-      });
-  };
-};
-
-export const unFollowUserThunk = (userId) => {
-  return (dispatch) => {
-    usersAPI.unfollow(userId)
-      .then((data) => {
-        if (data.resultCode === 0) {
-          dispatch(unFollowAC(userId));
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при подписке:', error);
-      })
-      .finally(() => {
-        dispatch(toggleFollowingProgress(false, userId));
-      });
-  };
-};
