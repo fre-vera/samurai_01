@@ -11,8 +11,6 @@ import { Navbar } from './components';
 import { ProfileContainer } from './components/Profile/ProfileContainer';
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer').then((module) => ({ default: module.DialogsContainer })));
 const UsersContainer = React.lazy(() => import('./components/Users/UsersContainer').then((module) => ({ default: module.UsersContainer })));
-// import { DialogsContainer } from './components/Dialogs/DialogsContainer';
-// import { UsersContainer } from './components/Users/UsersContainer';
 import { LoginContainer } from './components/Login/LoginContainer';
 import { initializeApp } from './components/redux/app-reduser';
 import { PrivateRoute } from './components/common/PrivateRoute';
@@ -28,6 +26,10 @@ export const App = () => {
     dispatch(initializeApp());
   }, [dispatch]);
 
+  if (!isAuth && window.location.pathname === '/profile') {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <BrowserRouter>
       <div className={classes.appWrapper}>
@@ -37,7 +39,7 @@ export const App = () => {
           <Suspense fallback={<Preloader />}>
             <Routes>
               <Route path='/profile/:userId' element={<PrivateRoute><ProfileContainer /></PrivateRoute>} />
-              <Route path='/profile/' element={<PrivateRoute><ProfileContainer /></PrivateRoute>} />
+              <Route path='/profile/' element={isAuth ? <Navigate to={`/profile/${userId}`} replace /> : <Navigate to="/login" replace />} />
               <Route path='/dialogs' element={<PrivateRoute><DialogsContainer /></PrivateRoute>} />
               <Route path='/users' element={<PrivateRoute><UsersContainer /></PrivateRoute>} />
               <Route
