@@ -61,6 +61,25 @@ export const updateStatus = createAsyncThunk(
   },
 );
 
+export const updatePhoto = createAsyncThunk(
+  'profile/updatePhoto',
+  async (file, { rejectWithValue }) => {
+    try {
+      const response = await profileApi.updatePhoto(file);
+      if (response.resultCode === 0) {
+        return response.data.photos;
+      } else {
+        return rejectWithValue('Ошибка при обновлении фото');
+      }
+    } catch (error) {
+      return rejectWithValue({
+        message: 'Ошибка при получении фото',
+        error: error.message,
+      });
+    }
+  },
+);
+
 export const profileSlice = createSlice({
   name: 'profile',
   initialState,
@@ -99,6 +118,14 @@ export const profileSlice = createSlice({
         state.status = action.payload;
       })
       .addCase(updateStatus.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(updatePhoto.fulfilled, (state, action) => {
+        if (state.profile) {
+          state.profile.photos = action.payload;
+        }
+      })
+      .addCase(updatePhoto.rejected, (state, action) => {
         state.error = action.payload;
       });
   },
