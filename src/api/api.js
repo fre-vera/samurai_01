@@ -9,46 +9,56 @@ const instance = axios.create({
 });
 
 export const usersAPI = {
-  getUsers: (currentPage = 1, pageSize = 10) => {
-    return instance.get(`users?page=${currentPage}&count=${pageSize}`)
-      .then((response) => response.data);
+  getUsers: async (currentPage = 1, pageSize = 10) => {
+    const response = await instance.get(`users?page=${currentPage}&count=${pageSize}`);
+    return response.data;
   },
-  follow: (userId) => {
-    return instance.post(`follow/${userId}`, {})
-      .then((response) => response.data);
+  follow: async (userId) => {
+    const response = await instance.post(`follow/${userId}`, {});
+    return response.data;
   },
-  unfollow: (userId) => {
-    return instance.delete(`follow/${userId}`)
-      .then((response) => response.data);
+  unfollow: async (userId) => {
+    const response = await instance.delete(`follow/${userId}`);
+    return response.data;
   },
 };
 
 export const authApi = {
-  getAuth: () => {
-    return instance.get(`auth/me`)
-      .then((response) => response.data);
+  getAuth: async () => {
+    const response = await instance.get(`auth/me`);
+    return response.data;
   },
-  login: (email, password, rememberMe = false) => {
-    return instance.post(`auth/login`, { email, password, rememberMe })
-      .then((response) => response.data);
+  login: async (email, password, rememberMe = false) => {
+    const response = await instance.post(`auth/login`, { email, password, rememberMe });
+    return response.data;
   },
-  logout: () => {
-    return instance.delete(`auth/login`)
-      .then((response) => response.data);
+  logout: async () => {
+    const response = await instance.delete(`auth/login`);
+    return response.data;
   },
 };
 
 export const profileApi = {
-  getProfile: (userId) => {
-    return instance.get(`profile/${userId}`)
-      .then((response) => response.data);
+  getProfile: async (userId) => {
+    const response = await instance.get(`profile/${userId}`);
+    return response.data;
   },
-  getStatus: (userId) => {
-    return instance.get(`profile/status/${userId}`)
-      .then((response) => response.data);
+  getStatus: async (userId) => {
+    const response = await instance.get(`profile/status/${userId}`);
+    return response.data;
   },
-  updateStatus: (status) => {
-    return instance.put(`profile/status`, { status })
-      .then((response) => response.data);
+  updateStatus: async (status) => {
+    const response = await instance.put(`profile/status`, { status });
+    return response.data;
+  },
+  updatePhoto: async (photoFile) => {
+    const formData = new FormData();
+    formData.append('image', photoFile);
+    const response = await instance.put(`profile/photo`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
   },
 };
