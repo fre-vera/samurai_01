@@ -1,0 +1,22 @@
+.nav {
+  background-color: #f200ff;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 0;
+
+  .item {
+    color: white;
+    padding: 10px 15px;
+  }
+
+  a {
+    text-decoration: none;
+    color: white;
+    display: block;
+  }
+
+  .active {
+    color: gold;
+  }
+}
