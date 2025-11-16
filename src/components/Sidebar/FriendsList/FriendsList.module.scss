@@ -1,0 +1,59 @@
+.friendsSection {
+  background-color: #f200ff;
+  padding: 10px;
+  margin: 0;
+  height: 100vh;
+
+  h3 {
+    margin: 0 0 10px 0;
+    padding-top: 10px;
+    color: white;
+    text-align: center;
+  }
+}
+
+.friendsList {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap; /* чтобы было в одну строку */
+  // overflow-x: auto; /* горизонтальная прокрутка */
+  padding-bottom: 10px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.name {
+  margin-bottom: 5px;
+  font-size: 14px;
+  text-align: center;
+  color: #fff;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid black;
+}
+
+.name {
+  margin-bottom: 5px;
+  font-size: 14px;
+  text-align: center;
+  color: #fff;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid black;
+}

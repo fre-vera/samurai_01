@@ -9,7 +9,7 @@ export const HeaderContainer = () => {
   const { isAuth, login } = useSelector((state) => state.auth);
 
   const handleLogoClick = () => {
-    navigate('/profile');
+    navigate('/profile/32286');
   };
 
   const handleLogout = async () => {

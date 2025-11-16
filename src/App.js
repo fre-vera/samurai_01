@@ -1,47 +1,73 @@
+import React, { useEffect, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import classes from './App.module.scss';
 import { HeaderContainer } from './components/Header';
-import { Navbar } from './components';
+import { Sidebar } from './components/Sidebar/Sidebar';
 import { ProfileContainer } from './components/Profile/ProfileContainer';
-import { DialogsContainer } from './components/Dialogs/DialogsContainer';
-import { UsersContainer } from './components/Users/UsersContainer';
 import { LoginContainer } from './components/Login/LoginContainer';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { initializeApp } from './components/redux/app-reduser';
-import { Navigate } from 'react-router-dom';
 import { PrivateRoute } from './components/common/PrivateRoute';
+import { Preloader } from './components/common/Preloader';
+
+const DialogsContainer = React.lazy(() =>
+  import('./components/Dialogs/DialogsContainer').then((module) => ({ default: module.DialogsContainer })),
+);
+const UsersContainer = React.lazy(() =>
+  import('./components/Users/UsersContainer').then((module) => ({ default: module.UsersContainer })),
+);
 
 export const App = () => {
   const dispatch = useDispatch();
-  const sidebar = useSelector((state) => state.sidebar);
   const isAuth = useSelector((state) => state.auth.isAuth);
   const userId = useSelector((state) => state.auth.userId);
-
 
   useEffect(() => {
     dispatch(initializeApp());
   }, [dispatch]);
 
+  if (!isAuth && window.location.pathname === '/profile') {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <BrowserRouter>
       <div className={classes.appWrapper}>
+        {/* Header сверху */}
         <HeaderContainer />
-        <Navbar state={sidebar} />
-        <div className={classes.appContent}>
-          <Routes>
-            <Route path='/profile/:userId' element={<PrivateRoute><ProfileContainer /></PrivateRoute>} />
-            <Route path='/profile/' element={<PrivateRoute><ProfileContainer /></PrivateRoute>} />
-            <Route path='/dialogs' element={<PrivateRoute><DialogsContainer /></PrivateRoute>} />
-            <Route path='/users' element={<PrivateRoute><UsersContainer /></PrivateRoute>} />
-            <Route
-              path="/login" element={isAuth ? <Navigate to={`/profile/${userId}`} /> : <LoginContainer />}
-            />
-            {/* <Route path='/news' element={<News />} />
-            <Route path='/music' element={<Music />} />
-            <Route path='/settings' element={<Settings />} /> */}
-          </Routes>
+
+        {/* Основная область: sidebar слева + контент справа */}
+        <div className={classes.mainArea}>
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Основной контент справа */}
+          <div className={classes.appContent}>
+            <Suspense fallback={<Preloader />}>
+              <Routes>
+                <Route
+                  path="/profile/:userId"
+                  element={
+                    <PrivateRoute>
+                      <ProfileContainer />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profile/"
+                  element={isAuth ? <Navigate to={`/profile/${userId}`} replace /> : <Navigate to="/login" replace />}
+                />
+                <Route path="/dialogs" element={<PrivateRoute><DialogsContainer /></PrivateRoute>} />
+                <Route path="/users" element={<PrivateRoute><UsersContainer /></PrivateRoute>} />
+                <Route
+                  path="/login"
+                  element={isAuth ? <Navigate to={`/profile/${userId}`} /> : <LoginContainer />}
+                />
+                {/* Можно добавить редирект на /profile по умолчанию */}
+                <Route path="*" element={<Navigate to={isAuth ? `/profile/${userId}` : '/login'} replace />} />
+              </Routes>
+            </Suspense>
+          </div>
         </div>
       </div>
     </BrowserRouter>

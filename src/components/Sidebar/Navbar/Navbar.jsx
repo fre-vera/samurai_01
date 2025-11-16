@@ -25,20 +25,6 @@ export const Navbar = (props) => {
           </div>
         ))}
       </nav>
-      <aside className={classes.friendsSection}>
-        <div className={classes.wrapper}>
-          <h3>Friends</h3>
-          <div className={classes.friendsList}>
-            {props.state.map((friend) =>
-              <div key={friend.id} className={classes.card}>
-                <p className={classes.name}>{friend.name}</p>
-                <img src={friend.img} alt={friend.name} className={classes.avatar} />
-              </div>,
-            )}
-          </div>
-        </div>
-      </aside>
     </div>
   );
 };
-
