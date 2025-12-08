@@ -9,8 +9,10 @@ const instance = axios.create({
 });
 
 export const usersAPI = {
-  getUsers: async (currentPage = 1, pageSize = 10) => {
-    const response = await instance.get(`users?page=${currentPage}&count=${pageSize}`);
+  getUsers: async (currentPage = 1, pageSize = 10, friend = null) => {
+    const friendParam = friend !== null ? `&friend=${friend}` : '';
+    const response = await instance
+      .get(`users?page=${currentPage}&count=${pageSize}${friendParam}`);
     return response.data;
   },
   follow: async (userId) => {
@@ -22,6 +24,7 @@ export const usersAPI = {
     return response.data;
   },
 };
+
 
 export const authApi = {
   getAuth: async () => {
