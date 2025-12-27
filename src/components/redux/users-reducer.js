@@ -1,9 +1,10 @@
 import { usersAPI } from '../../api/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getFriendsThunk } from './friends-reducer';
 
 const initialState = {
   users: [],
-  pageSize: 5,
+  pageSize: 20,
   totalUsersCount: 0,
   currentPage: 1,
   isUsersLoading: false,
@@ -31,10 +32,11 @@ export const getUsersThunkCreator = createAsyncThunk(
 
 export const followUserThunk = createAsyncThunk(
   'users/followUserThunk',
-  async (userId, { rejectWithValue }) => {
+  async (userId, { dispatch, rejectWithValue }) => {
     try {
       const response = await usersAPI.follow(userId);
       if (response.resultCode === 0) {
+        dispatch(getFriendsThunk());
         return userId;
       } else {
         return rejectWithValue('Ошибка при подписке');
@@ -50,10 +52,11 @@ export const followUserThunk = createAsyncThunk(
 
 export const unFollowUserThunk = createAsyncThunk(
   'users/unFollowUserThunk',
-  async (userId, { rejectWithValue }) => {
+  async (userId, { dispatch, rejectWithValue }) => {
     try {
       const response = await usersAPI.unfollow(userId);
       if (response.resultCode === 0) {
+        dispatch(getFriendsThunk());
         return userId;
       } else {
         return rejectWithValue('Ошибка при отписке');
@@ -83,7 +86,7 @@ export const usersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    // getUsers
+      // getUsers
       .addCase(getUsersThunkCreator.pending, (state) => {
         state.isUsersLoading = true;
         state.error = null;
@@ -97,7 +100,7 @@ export const usersSlice = createSlice({
         state.error = action.payload;
         state.isUsersLoading = false;
       })
-    // follow
+      // follow
       .addCase(followUserThunk.fulfilled, (state, action) => {
         state.users = state.users.map((user) =>
           user.id === action.payload ? { ...user, followed: true } : user,

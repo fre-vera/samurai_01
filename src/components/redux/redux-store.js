@@ -1,16 +1,16 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { dialogsSlice } from './dialogs-reducer';
 import { profileSlice } from './profile-reducer';
-import { sidebarReducer } from './sidebar-reducer';
+import { friendsSlice } from './friends-reducer';
 import { usersSlice } from './users-reducer';
 import { authSlice } from './auth-reduser';
-import { thunk } from 'redux-thunk';
 import { appSlice } from './app-reduser';
+import { thunk } from 'redux-thunk';
 
 export const reducer = combineReducers({
   profilePage: profileSlice.reducer,
   dialogsPage: dialogsSlice.reducer,
-  sidebar: sidebarReducer,
+  friendsPage: friendsSlice.reducer,
   usersPage: usersSlice.reducer,
   auth: authSlice.reducer,
   app: appSlice.reducer,
